@@ -16,6 +16,8 @@ export const LetterBoard: React.FunctionComponent = () => {
     }
 
     return <div id="letter-board__container">
-        {renderLetterBoard()}
+        <div id="letter-board__board">
+            {renderLetterBoard()}
+        </div>
     </div>;
 }
