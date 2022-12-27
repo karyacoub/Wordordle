@@ -1,7 +1,7 @@
 {
   "name": "wordordle",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "homepage": "https://karyacoub.github.io/Wordordle",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
