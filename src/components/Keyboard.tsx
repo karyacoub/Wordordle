@@ -1,40 +1,62 @@
 import React from "react";
+import { GuessUtils } from "../utils/guessUtils";
+
+enum KeyType {
+    LETTER,
+    BACKSPACE,
+    ENTER,
+}
 
 export const Keyboard: React.FunctionComponent = () => {
+
+    function onClick(e: any, keyType: KeyType) {
+        if (keyType === KeyType.BACKSPACE) {
+            GuessUtils.popChar();
+        } else if (keyType === KeyType.ENTER) {
+
+        } else {
+            GuessUtils.addCharToGuess(e.target.innerHTML);
+        }
+    }
+
+    function renderKey(char: string, keyType: KeyType) {
+        return <div className="keyboard__key" onClick={(e: any) => onClick(e, keyType)}>{char}</div>;
+    }
+
     return <div id="keyboard__container">
         <div className="keyboard__row">
-            <div className="keyboard__key">Q</div>
-            <div className="keyboard__key">W</div>
-            <div className="keyboard__key">E</div>
-            <div className="keyboard__key">R</div>
-            <div className="keyboard__key">T</div>
-            <div className="keyboard__key">Y</div>
-            <div className="keyboard__key">U</div>
-            <div className="keyboard__key">I</div>
-            <div className="keyboard__key">O</div>
-            <div className="keyboard__key">P</div>
+            {renderKey("Q", KeyType.LETTER)}
+            {renderKey("W", KeyType.LETTER)}
+            {renderKey("E", KeyType.LETTER)}
+            {renderKey("R", KeyType.LETTER)}
+            {renderKey("T", KeyType.LETTER)}
+            {renderKey("Y", KeyType.LETTER)}
+            {renderKey("U", KeyType.LETTER)}
+            {renderKey("I", KeyType.LETTER)}
+            {renderKey("O", KeyType.LETTER)}
+            {renderKey("P", KeyType.LETTER)}
         </div>
         <div className="keyboard__row">
-            <div className="keyboard__key">A</div>
-            <div className="keyboard__key">S</div>
-            <div className="keyboard__key">D</div>
-            <div className="keyboard__key">F</div>
-            <div className="keyboard__key">G</div>
-            <div className="keyboard__key">H</div>
-            <div className="keyboard__key">J</div>
-            <div className="keyboard__key">K</div>
-            <div className="keyboard__key">L</div>
+            {renderKey("A", KeyType.LETTER)}
+            {renderKey("S", KeyType.LETTER)}
+            {renderKey("D", KeyType.LETTER)}
+            {renderKey("F", KeyType.LETTER)}
+            {renderKey("G", KeyType.LETTER)}
+            {renderKey("H", KeyType.LETTER)}
+            {renderKey("J", KeyType.LETTER)}
+            {renderKey("K", KeyType.LETTER)}
+            {renderKey("L", KeyType.LETTER)}
         </div>
         <div className="keyboard__row">
-            <div className="keyboard__key">ENTER</div>
-            <div className="keyboard__key">Z</div>
-            <div className="keyboard__key">X</div>
-            <div className="keyboard__key">C</div>
-            <div className="keyboard__key">V</div>
-            <div className="keyboard__key">B</div>
-            <div className="keyboard__key">N</div>
-            <div className="keyboard__key">M</div>
-            <div className="keyboard__key">BKSPC</div>
+            {renderKey("ENTER", KeyType.ENTER)}
+            {renderKey("Z", KeyType.LETTER)}
+            {renderKey("X", KeyType.LETTER)}
+            {renderKey("C", KeyType.LETTER)}
+            {renderKey("V", KeyType.LETTER)}
+            {renderKey("B", KeyType.LETTER)}
+            {renderKey("N", KeyType.LETTER)}
+            {renderKey("M", KeyType.LETTER)}
+            {renderKey("BKSPC", KeyType.BACKSPACE)}
         </div>
     </div>
 }

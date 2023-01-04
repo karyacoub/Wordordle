@@ -1,7 +1,15 @@
 import React from "react";
 
-export const Letter: React.FunctionComponent = () => {
-    return <div className="letter-container">
-        A
+interface ILetterProps {
+    char?: string;
+}
+
+export const Letter: React.FunctionComponent<ILetterProps> = (props) => {
+    function getCurrentLetter() {
+        return props.char ? props.char : " ";
+    }
+
+    return <div className="letter-container clickable">
+        {getCurrentLetter()}
     </div>;
 }
