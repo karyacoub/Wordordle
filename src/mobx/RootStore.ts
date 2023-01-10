@@ -37,7 +37,6 @@ class RootStore {
 
     enter() {
         if (this.guesses[this.currentGuessNum].guess.length === this.maxGuessLength && this.currentGuessNum < this.maxGuessLength + 1) {
-            console.log("ayy");
             this.setCurrentGuessNum(this.currentGuessNum + 1);
         }
     }
