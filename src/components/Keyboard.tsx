@@ -1,5 +1,6 @@
+import { observer } from "mobx-react-lite";
 import React from "react";
-import { GuessUtils } from "../utils/guessUtils";
+import { useStore } from "../mobx/RootStore";
 
 enum KeyType {
     LETTER,
@@ -7,15 +8,17 @@ enum KeyType {
     ENTER,
 }
 
-export const Keyboard: React.FunctionComponent = () => {
+export const Keyboard: React.FunctionComponent = observer(() => {
+
+    const store = useStore();
 
     function onClick(e: any, keyType: KeyType) {
         if (keyType === KeyType.BACKSPACE) {
-            GuessUtils.popChar();
+            store.backspace();
         } else if (keyType === KeyType.ENTER) {
-
+            
         } else {
-            GuessUtils.addCharToGuess(e.target.innerHTML);
+            store.addToCurrentGuess(e.target.innerHTML);
         }
     }
 
@@ -59,4 +62,4 @@ export const Keyboard: React.FunctionComponent = () => {
             {renderKey("BKSPC", KeyType.BACKSPACE)}
         </div>
     </div>
-}
+})

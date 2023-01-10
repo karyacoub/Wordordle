@@ -9,7 +9,7 @@ export const Letter: React.FunctionComponent<ILetterProps> = (props) => {
         return props.char ? props.char : " ";
     }
 
-    return <div className="letter-container clickable">
+    return <div className="letter-container">
         {getCurrentLetter()}
     </div>;
 }

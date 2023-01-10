@@ -1,22 +1,20 @@
 import React from "react";
 import { Letter } from "./Letter";
 import { LETTER_COUNT } from "../models/Constants";
-import { GuessUtils } from "../utils/guessUtils";
+import { useStore } from "../mobx/RootStore";
+import { observer } from "mobx-react-lite";
 
-export const LetterBoard: React.FunctionComponent = () => {
+export const LetterBoard: React.FunctionComponent = observer(() => {
+    const store = useStore();
 
-    React.useEffect(() => {
-        console.log("useEffect");
-    }, [GuessUtils.getCurrentGuess()])
-
-    function renderLetterRow() {
-        return Array(LETTER_COUNT).fill(0).map((_, idx) => <Letter />);
+    function renderLetterRow(rowNum: number) {
+        return Array(LETTER_COUNT).fill(0).map((_, idx) => <Letter key={`letter-${idx}`} char={store.guesses[rowNum]?.guess.charAt(idx)} />);
     }
 
     function renderLetterBoard() {
-        return Array(LETTER_COUNT + 1).fill(0).map(() => {
-            return <div className="letter-board__row">
-                {renderLetterRow()}
+        return Array(LETTER_COUNT + 1).fill(0).map((_, idx) => {
+            return <div className="letter-board__row" key={`row-${idx}`}>
+                {renderLetterRow(idx)}
             </div>;
         });
     }
@@ -26,4 +24,4 @@ export const LetterBoard: React.FunctionComponent = () => {
             {renderLetterBoard()}
         </div>
     </div>;
-}
+});
