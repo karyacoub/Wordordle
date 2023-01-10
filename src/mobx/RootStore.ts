@@ -29,19 +29,26 @@ class RootStore {
         const newGuesses = [...this.guesses];
 
         if (newGuesses.length > 0) {
-            newGuesses[newGuesses.length - 1].popCharFromGuess();
+            newGuesses[this.currentGuessNum].popCharFromGuess();
         }
 
         this.guesses = newGuesses;
     }
 
+    enter() {
+        if (this.guesses[this.currentGuessNum].guess.length === this.maxGuessLength && this.currentGuessNum < this.maxGuessLength + 1) {
+            console.log("ayy");
+            this.setCurrentGuessNum(this.currentGuessNum + 1);
+        }
+    }
+
     addToCurrentGuess(char: string) {
         const newGuesses = [...this.guesses];
 
-        if (newGuesses.length <= 0) {
+        if (newGuesses.length <= this.currentGuessNum) {
             newGuesses.push(new Guess(char));
-        } else if (newGuesses[newGuesses.length - 1].guess.length < this.maxGuessLength) {
-            newGuesses[newGuesses.length - 1].addCharToGuess(char);
+        } else if (newGuesses[this.currentGuessNum].guess.length < this.maxGuessLength) {
+            newGuesses[this.currentGuessNum].addCharToGuess(char);
         }
 
         this.guesses = newGuesses;

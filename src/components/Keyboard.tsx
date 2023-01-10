@@ -16,7 +16,7 @@ export const Keyboard: React.FunctionComponent = observer(() => {
         if (keyType === KeyType.BACKSPACE) {
             store.backspace();
         } else if (keyType === KeyType.ENTER) {
-            
+            store.enter();
         } else {
             store.addToCurrentGuess(e.target.innerHTML);
         }
