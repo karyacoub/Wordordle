@@ -1,7 +1,7 @@
 import { makeAutoObservable, configure } from "mobx";
 import { Guess } from "../models/Guess";
 import React from "react";
-import { LetterCount } from "../models/LetterCount";
+import { LetterCount } from "../models/Enums";
 
 configure({
     enforceActions: "never",
@@ -12,6 +12,7 @@ class RootStore {
     maxGuessLength: number = LetterCount.FIVE;
     currentGuessNum: number = 0;
     guesses: Guess[] = [];
+    todaysWord: string = "irate".toLowerCase();
 
     constructor() {
         makeAutoObservable(this);
@@ -37,6 +38,7 @@ class RootStore {
 
     enter() {
         if (this.guesses[this.currentGuessNum].guess.length === this.maxGuessLength && this.currentGuessNum < this.maxGuessLength + 1) {
+            this.guesses[this.currentGuessNum].submit();
             this.setCurrentGuessNum(this.currentGuessNum + 1);
         }
     }

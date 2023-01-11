@@ -1,3 +1,3 @@
-import { LetterCount } from "./LetterCount";
+import { LetterCount } from "./Enums";
 
 export const LETTER_COUNT: number = LetterCount.FIVE;
