@@ -1,5 +1,5 @@
 import { makeAutoObservable, configure } from "mobx";
-import { Guess } from "../models/Guess";
+import { Guess, LetterObj, Word } from "../models/Guess";
 import React from "react";
 import { LetterCount } from "../models/Enums";
 
@@ -26,6 +26,10 @@ class RootStore {
         this.currentGuessNum = currentGuessNum;
     }
 
+    setGuesses(guesses: Guess[]) {
+        this.guesses = guesses;
+    }
+
     backspace() {
         const newGuesses = [...this.guesses];
 
@@ -33,12 +37,16 @@ class RootStore {
             newGuesses[this.currentGuessNum].popCharFromGuess();
         }
 
-        this.guesses = newGuesses;
+        this.setGuesses(newGuesses);
     }
 
     enter() {
-        if (this.guesses[this.currentGuessNum].guess.length === this.maxGuessLength && this.currentGuessNum < this.maxGuessLength + 1) {
+        if (this.guesses[this.currentGuessNum].guess.length() === this.maxGuessLength && this.currentGuessNum < this.maxGuessLength + 1) {
+            const letters: LetterObj[] = this.todaysWord.split("").map((letter: string) => new LetterObj(letter));
+            const word = new Word(letters);
+
             this.guesses[this.currentGuessNum].submit();
+            this.guesses[this.currentGuessNum].guess.validate(word);
             this.setCurrentGuessNum(this.currentGuessNum + 1);
         }
     }
@@ -47,12 +55,13 @@ class RootStore {
         const newGuesses = [...this.guesses];
 
         if (newGuesses.length <= this.currentGuessNum) {
-            newGuesses.push(new Guess(char));
-        } else if (newGuesses[this.currentGuessNum].guess.length < this.maxGuessLength) {
+            const newGuess: Word = new Word([new LetterObj(char)]);
+            newGuesses.push(new Guess(newGuess));
+        } else if (newGuesses[this.currentGuessNum].guess.length() < this.maxGuessLength) {
             newGuesses[this.currentGuessNum].addCharToGuess(char);
         }
 
-        this.guesses = newGuesses;
+        this.setGuesses(newGuesses);
     }
 }
 
