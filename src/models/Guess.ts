@@ -1,11 +1,11 @@
 import { LetterStatus } from "./Enums";
 
 export class Guess {
-    guess: Word;
+    guess: LetterObj[];
     isSubmitted: boolean;
     
     public constructor(
-        guess: Word = new Word(),
+        guess: LetterObj[] = [],
         isSubmitted = false,
     ) {
         this.guess = guess;
@@ -13,21 +13,45 @@ export class Guess {
     }
 
     public addCharToGuess(char: string): Guess {
-        this.guess = this.guess.push(char);
+        this.guess = [...this.guess, new LetterObj(char, LetterStatus.NONE)];
         return this;
     }
 
     public popCharFromGuess(): Guess {
-        this.guess = this.guess.pop();
+        const newLetters: LetterObj[] = [...this.guess];
+        newLetters.pop();
+        this.guess = newLetters;
         return this;
+    }
+
+    public includes(letter: LetterObj): boolean {
+        return this.guess.map((letter: LetterObj) => letter.char).join().includes(letter.char);
+    }
+
+    public charAt(idx: number): LetterObj {
+        return idx < this.guess.length
+            ? this.guess[idx]
+            : new LetterObj();
     }
 
     public submit() {
         this.isSubmitted = true;
     }
 
+    public validate(word: Guess) {
+        word.guess.forEach((letter: LetterObj, idx: number) => {
+            if (this.guess[idx].equals(letter)) {
+                this.guess[idx].status = LetterStatus.CORRECT;
+            } else if (word.includes(this.guess[idx])) {
+                this.guess[idx].status = LetterStatus.SEMICORRECT;
+            } else {
+                this.guess[idx].status = LetterStatus.INCORRECT;
+            }
+        });
+    }
+
     public toString() {
-        return this.guess.toString();
+        return this.guess.map((letter: LetterObj) => letter.char).join();
     }
 }
 
@@ -38,46 +62,13 @@ export class Word {
         this.letters = letters;
     }
 
-    public includes(letter: LetterObj): boolean {
-        return this.letters.map((letter: LetterObj) => letter.char).join().includes(letter.char);
-    }
-
-    public push(char: string): Word {
-        const newLetters: LetterObj[] = [...this.letters, new LetterObj(char, LetterStatus.NONE)];
-        return new Word(newLetters);
-    }
-
-    public pop(): Word {
-        const newLetters: LetterObj[] = [...this.letters];
-        newLetters.pop();
-        return new Word(newLetters);
-    }
-
     public length(): number {
         return this.letters.length;
     }
 
-    public charAt(idx: number): LetterObj {
-        return idx < this.length()
-            ? this.letters[idx]
-            : new LetterObj();
-    }
 
-    public toString(): string {
-        return this.letters.map((letter: LetterObj) => letter.char).join();
-    }
 
-    public validate(word: Word) {
-        word.letters.forEach((letter: LetterObj, idx: number) => {
-            if (this.letters[idx].equals(letter)) {
-                this.letters[idx].status = LetterStatus.CORRECT;
-            } else if (word.includes(this.letters[idx])) {
-                this.letters[idx].status = LetterStatus.SEMICORRECT;
-            } else {
-                this.letters[idx].status = LetterStatus.INCORRECT;
-            }
-        });
-    }
+    
 }
 
 export class LetterObj {

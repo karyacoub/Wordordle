@@ -3,7 +3,6 @@ import { Letter } from "./Letter";
 import { LETTER_COUNT } from "../models/Constants";
 import { useStore } from "../mobx/RootStore";
 import { observer } from "mobx-react-lite";
-import { stopCoverage } from "v8";
 import { LetterStatus } from "../models/Enums";
 
 export const LetterBoard: React.FunctionComponent = observer(() => {
@@ -24,7 +23,7 @@ export const LetterBoard: React.FunctionComponent = observer(() => {
         return Array(LETTER_COUNT).fill(0).map((_, idx) => 
             <Letter 
                 key={`letter-${idx}`} 
-                letterObj={guesses[rowNum]?.guess.charAt(idx)}
+                letterObj={guesses[rowNum]?.charAt(idx)}
             />
         );
     }
