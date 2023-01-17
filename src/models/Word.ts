@@ -39,18 +39,24 @@ export class Word {
     }
 
     public validate(word: Word) {
-        word.letters.forEach((letter: LetterObj, idx: number) => {
-            if (this.letters[idx].equals(letter)) {
-                this.letters[idx].status = LetterStatus.CORRECT;
-            } else if (word.includes(this.letters[idx])) {
-                this.letters[idx].status = LetterStatus.SEMICORRECT;
+        const newLetters = [...this.letters];
+
+        newLetters.forEach((letter: LetterObj, idx: number) => {
+            if (word.charAt(idx).equals(letter)) {
+                newLetters[idx].status = LetterStatus.CORRECT;
+            } else if (word.includes(letter)) {
+                newLetters[idx].status = LetterStatus.SEMICORRECT;
             } else {
-                this.letters[idx].status = LetterStatus.INCORRECT;
+                newLetters[idx].status = LetterStatus.INCORRECT;
             }
         });
+
+        this.letters = newLetters;
+
+        return this;
     }
 
-    public toString() {
+    public toString(): string {
         return this.letters.map((letter: LetterObj) => letter.char).join();
     }
 }

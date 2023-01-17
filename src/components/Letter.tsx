@@ -21,4 +21,4 @@ export const Letter: React.FunctionComponent<ILetterProps> = (props) => {
     return <div className={`letter-container ${getLetterStatus()}`}>
         {getCurrentLetter()}
     </div>;
-}
+};
