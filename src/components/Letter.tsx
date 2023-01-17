@@ -1,6 +1,6 @@
 import React from "react";
 import { LetterStatus } from "../models/Enums";
-import { LetterObj } from "../models/Guess";
+import { LetterObj } from "../models/Word";
 
 interface ILetterProps {
     letterObj?: LetterObj;

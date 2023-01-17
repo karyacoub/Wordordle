@@ -1,5 +1,5 @@
 import { makeAutoObservable, configure } from "mobx";
-import { Guess, LetterObj } from "../models/Guess";
+import { Word, LetterObj } from "../models/Word";
 import React from "react";
 import { LetterCount } from "../models/Enums";
 
@@ -11,7 +11,7 @@ class RootStore {
 
     maxGuessLength: number = LetterCount.FIVE;
     currentGuessNum: number = 0;
-    guesses: Guess[] = [];
+    guesses: Word[] = [];
     todaysWord: string = "irate".toLowerCase();
 
     constructor() {
@@ -26,7 +26,7 @@ class RootStore {
         this.currentGuessNum = currentGuessNum;
     }
 
-    setGuesses(guesses: Guess[]) {
+    setGuesses(guesses: Word[]) {
         this.guesses = guesses;
     }
 
@@ -34,16 +34,16 @@ class RootStore {
         const newGuesses = [...this.guesses];
 
         if (newGuesses.length > 0) {
-            newGuesses[this.currentGuessNum].popCharFromGuess();
+            newGuesses[this.currentGuessNum].pop();
         }
 
         this.setGuesses(newGuesses);
     }
 
     enter() {
-        if (this.guesses[this.currentGuessNum].guess.length === this.maxGuessLength && this.currentGuessNum < this.maxGuessLength + 1) {
+        if (this.guesses[this.currentGuessNum].letters.length === this.maxGuessLength && this.currentGuessNum < this.maxGuessLength + 1) {
             const letters: LetterObj[] = this.todaysWord.split("").map((letter: string) => new LetterObj(letter));
-            const word = new Guess(letters);
+            const word = new Word(letters);
 
             this.guesses[this.currentGuessNum].submit();
             this.guesses[this.currentGuessNum].validate(word);
@@ -55,9 +55,9 @@ class RootStore {
         const newGuesses = [...this.guesses];
 
         if (newGuesses.length <= this.currentGuessNum) {
-            newGuesses.push(new Guess([new LetterObj(char)]));
-        } else if (newGuesses[this.currentGuessNum].guess.length < this.maxGuessLength) {
-            newGuesses[this.currentGuessNum].addCharToGuess(char);
+            newGuesses.push(new Word([new LetterObj(char)]));
+        } else if (newGuesses[this.currentGuessNum].letters.length < this.maxGuessLength) {
+            newGuesses[this.currentGuessNum].push(char);
         }
 
         this.setGuesses(newGuesses);
