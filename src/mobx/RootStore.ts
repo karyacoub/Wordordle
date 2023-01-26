@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { Word, LetterObj } from "../models/Word";
+import { Word, LetterObj, WordOfTheDay } from "../models/Word";
 import React from "react";
 import { LetterCount } from "../models/Enums";
 
@@ -8,7 +8,7 @@ class RootStore {
     maxGuessLength: number = LetterCount.FIVE;
     currentGuessNum: number = 0;
     guesses: Word[] = [];
-    todaysWord: string = "irate".toLowerCase();
+    todaysWord: WordOfTheDay = new WordOfTheDay("irate");
 
     constructor() {
         makeAutoObservable(this);
@@ -37,15 +37,13 @@ class RootStore {
     }
 
     enter() {
-
         const newGuesses = [...this.guesses];
 
         if (newGuesses[this.currentGuessNum].letters.length === this.maxGuessLength && this.currentGuessNum < this.maxGuessLength + 1) {
-            const todaysWordLetters: LetterObj[] = this.todaysWord.split("").map((letter: string) => new LetterObj(letter));
-            const todaysWordCasted = new Word(todaysWordLetters);
+            // const todaysWordLetters: LetterObj[] = this.todaysWord.split("").map((letter: string) => new LetterObj(letter));
+            // const todaysWordCasted = new Word(todaysWordLetters);
 
-            newGuesses[this.currentGuessNum].submit();
-            newGuesses[this.currentGuessNum].validate(todaysWordCasted);
+            newGuesses[this.currentGuessNum].validate(this.todaysWord);
 
             this.setCurrentGuessNum(this.currentGuessNum + 1);
         }

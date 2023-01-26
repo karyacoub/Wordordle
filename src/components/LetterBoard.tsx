@@ -3,21 +3,9 @@ import { Letter } from "./Letter";
 import { LETTER_COUNT } from "../models/Constants";
 import { useStore } from "../mobx/RootStore";
 import { observer } from "mobx-react-lite";
-import { LetterStatus } from "../models/Enums";
 
 export const LetterBoard: React.FunctionComponent = observer(() => {
-    const {guesses, todaysWord} = useStore();
-
-    function getLetterStatus(rowNum: number, idx: number): LetterStatus {
-        let letterStatus = LetterStatus.NONE;
-        const guess = guesses[rowNum];
-
-        if (guess && guess.isSubmitted) {
-            
-        }
-
-        return letterStatus;
-    }
+    const {guesses} = useStore();
 
     function renderLetterRow(rowNum: number) {
         return Array(LETTER_COUNT).fill(0).map((_, idx) => 

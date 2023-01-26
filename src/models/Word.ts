@@ -1,15 +1,11 @@
 import { LetterStatus } from "./Enums";
+import { Map } from "immutable";
 
 export class Word {
     letters: LetterObj[];
-    isSubmitted: boolean;
     
-    public constructor(
-        letters: LetterObj[] = [],
-        isSubmitted = false,
-    ) {
+    public constructor(letters: LetterObj[] = []) {
         this.letters = letters;
-        this.isSubmitted = isSubmitted;
     }
 
     public push(char: string): Word {
@@ -34,22 +30,22 @@ export class Word {
             : new LetterObj();
     }
 
-    public submit() {
-        this.isSubmitted = true;
-    }
-
-    public validate(word: Word) {
+    public validate(word: WordOfTheDay) {
         const newLetters = [...this.letters];
 
         newLetters.forEach((letter: LetterObj, idx: number) => {
-            if (word.charAt(idx).equals(letter)) {
-                newLetters[idx].status = LetterStatus.CORRECT;
-            } else if (word.includes(letter)) {
-                newLetters[idx].status = LetterStatus.SEMICORRECT;
-            } else {
-                newLetters[idx].status = LetterStatus.INCORRECT;
-            }
+            newLetters[idx].status = word.validateLetter(letter, idx);
         });
+
+        // newLetters.forEach((letter: LetterObj, idx: number) => {
+        //     if (word.charAt(idx).equals(letter)) {
+        //         newLetters[idx].status = LetterStatus.CORRECT;
+        //     } else if (word.includes(letter)) {
+        //         newLetters[idx].status = LetterStatus.SEMICORRECT;
+        //     } else {
+        //         newLetters[idx].status = LetterStatus.INCORRECT;
+        //     }
+        // });
 
         this.letters = newLetters;
 
@@ -75,5 +71,38 @@ export class LetterObj {
 
     public equals(letter: LetterObj): boolean {
         return this.char === letter.char;
+    }
+}
+
+export class WordOfTheDay {
+    letterMap: Map<string, number[]>;
+
+    constructor(word: string) {
+        this.letterMap = Map();
+
+        word.toLowerCase().split("").forEach((char: string, idx: number) => {
+            this.letterMap = this.letterMap.has(char)
+                ? this.letterMap.set(char, [...(this.letterMap.get(char)!), idx])
+                : this.letterMap.set(char, [idx]);
+        });
+    }
+
+    public validateLetter(letter: LetterObj, letterIdx: number): LetterStatus {
+        const letterIndexes = this.letterMap.get(letter.char);
+
+        if (letterIndexes && letterIndexes.length > 0) {
+            // TODO: Find all instances of letter and compare against THAT list
+            const letterIndexesIdx = letterIndexes.findIndex((val: number) => val === letterIdx);
+
+            if (letterIndexesIdx >= 0) {
+                letterIndexes.splice(letterIndexesIdx, 1);
+                this.letterMap = this.letterMap.set(letter.char, letterIndexes);
+                return LetterStatus.CORRECT;
+            } else {
+                return LetterStatus.SEMICORRECT;
+            }
+        }
+
+        return LetterStatus.INCORRECT;
     }
 }
