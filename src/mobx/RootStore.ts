@@ -8,7 +8,7 @@ class RootStore {
     maxGuessLength: number = LetterCount.FIVE;
     currentGuessNum: number = 0;
     guesses: Word[] = [];
-    todaysWord: WordOfTheDay = new WordOfTheDay("irate");
+    todaysWord: WordOfTheDay = new WordOfTheDay("loopy");
 
     constructor() {
         makeAutoObservable(this);
