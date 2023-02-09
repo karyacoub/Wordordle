@@ -1,5 +1,6 @@
 import { LetterStatus } from "./Enums";
 import { Map } from "immutable";
+import { Letter } from "../components/Letter";
 
 export class Word {
     letters: LetterObj[];
@@ -91,15 +92,15 @@ export class WordOfTheDay {
                     return correctIdxs.findIndex((idx2: number) => idx === idx2) >= 0
                 });
 
-                if (correctGuessLetterIdxs.length > 0 && currentIdxs.length === correctGuessLetterIdxs.length) {
-                    correctGuessLetterIdxs.forEach((idx: number) => guessLetters[idx].status = LetterStatus.CORRECT);
-                } 
-                else if (correctGuessLetterIdxs.length > 0 && currentIdxs.length > correctGuessLetterIdxs.length) {
-                    correctGuessLetterIdxs.forEach((idx: number) => guessLetters[idx].status = LetterStatus.CORRECT);
+                // set all correct statuses
+                correctGuessLetterIdxs.forEach((idx: number) => guessLetters[idx].status = LetterStatus.CORRECT);
 
+                // set semicorrect statuses
+                if (correctGuessLetterIdxs.length > 0 && currentIdxs.length > correctGuessLetterIdxs.length) {
                     currentIdxs.forEach((idx: number, current: number) => {
-                        if (guessLetters[idx].status !== LetterStatus.CORRECT && current < correctIdxs.length)
-                        guessLetters[idx].status = LetterStatus.SEMICORRECT;
+                        if (guessLetters[idx].status !== LetterStatus.CORRECT && current < correctIdxs.length) {
+                            guessLetters[idx].status = LetterStatus.SEMICORRECT;
+                        }
                     });
                 }
                 else if (correctGuessLetterIdxs.length <= 0) {
@@ -112,6 +113,7 @@ export class WordOfTheDay {
             }
         });
 
+        // set incorrect statuses
         guessLetters.forEach((letter: LetterObj) => {
             if (letter.status === LetterStatus.NONE) {
                 letter.status = LetterStatus.INCORRECT;
