@@ -31,23 +31,6 @@ export class Word {
     }
 
     public validate(word: WordOfTheDay) {
-
-        // const newLetters = [...this.letters];
-
-        // newLetters.forEach((letter: LetterObj, idx: number) => {
-        //     newLetters[idx].status = word.validateLetter(letter, idx);
-        // });
-
-        // newLetters.forEach((letter: LetterObj, idx: number) => {
-        //     if (word.charAt(idx).equals(letter)) {
-        //         newLetters[idx].status = LetterStatus.CORRECT;
-        //     } else if (word.includes(letter)) {
-        //         newLetters[idx].status = LetterStatus.SEMICORRECT;
-        //     } else {
-        //         newLetters[idx].status = LetterStatus.INCORRECT;
-        //     }
-        // });
-
         this.letters = word.validate(this.letters);
 
         return this;
@@ -77,62 +60,64 @@ export class LetterObj {
 
 export class WordOfTheDay {
     letterIndexes: Map<string, number[]>;
+    word: string;
 
     constructor(word: string) {
-        this.letterIndexes = Map();
+        this.word = word;
+        this.letterIndexes = this.getLetterIndexes(word);
+    }
+
+    private getLetterIndexes(word: string) {
+        let letterIndexes = Map<string, number[]>();
 
         word.toLowerCase().split("").forEach((char: string, idx: number) => {
-            this.letterIndexes = this.letterIndexes.has(char)
-                ? this.letterIndexes.set(char, [...(this.letterIndexes.get(char)!), idx])
-                : this.letterIndexes.set(char, [idx]);
+            letterIndexes = letterIndexes.has(char)
+                ? letterIndexes.set(char, [...(letterIndexes.get(char)!), idx])
+                : letterIndexes.set(char, [idx]);
         });
+
+        return letterIndexes;
     }
 
     public validate(letters: LetterObj[]) {
-        const newLetters = [...letters];
-        let letterEncounters: Map<string, number> = Map();
+        const guessLetters: LetterObj[] = [...letters];
+        const guessLetterIndexes = this.getLetterIndexes(guessLetters.map((letter: LetterObj) => letter.char).join(""))
 
-        newLetters.forEach((letter: LetterObj, idx: number) => {
-            const letterLocations: number[] | undefined = this.letterIndexes.get(letter.char);
+        guessLetterIndexes.forEach((currentIdxs: number[], letter: string) => {
+            const correctIdxs: number[] | undefined = this.letterIndexes.get(letter);
 
-            letterEncounters = letterEncounters.get(letter.char) !== undefined
-                ? letterEncounters.set(letter.char, letterEncounters.get(letter.char)! + 1)
-                : letterEncounters.set(letter.char, 0);
-        
-            if (letterLocations && letterLocations.length > 0) {
-                const isCorrectLocation = letterLocations.findIndex((val: number) => val === idx) >= 0;
-                const previousEncounters: number = letterEncounters.get(letter.char) !== undefined
-                    ? letterEncounters.get(letter.char)!
-                    : 0;
+            if (correctIdxs) {
+                const correctGuessLetterIdxs = currentIdxs.filter((idx: number) => {
+                    return correctIdxs.findIndex((idx2: number) => idx === idx2) >= 0
+                });
 
-                // Letter is part of the word and is in the correct spot
-                if (isCorrectLocation) {
-                    letter.status = LetterStatus.CORRECT;
+                if (correctGuessLetterIdxs.length > 0 && currentIdxs.length === correctGuessLetterIdxs.length) {
+                    correctGuessLetterIdxs.forEach((idx: number) => guessLetters[idx].status = LetterStatus.CORRECT);
                 } 
+                else if (correctGuessLetterIdxs.length > 0 && currentIdxs.length > correctGuessLetterIdxs.length) {
+                    correctGuessLetterIdxs.forEach((idx: number) => guessLetters[idx].status = LetterStatus.CORRECT);
 
-                // Letter is part of the word, is in the incorrect spot, only appears once, and hasn't been encountered before
-                else if (letterLocations.length === 1 && previousEncounters === 0) {
-                    letter.status = LetterStatus.SEMICORRECT;
-                } 
-
-                // letter is part of the word, is in the incorrect spot, only appears once, and has been encountered before
-                else if (letterLocations.length === 1 && previousEncounters > 0) {
-                    letter.status = LetterStatus.INCORRECT;
-                } 
-
-                // letter is part of the word, is in the incorrect spot, appears more than once, and has been encountered that number of times
-                else if (letterLocations.length > 1 && letterLocations.length === previousEncounters) {
-                    letter.status = LetterStatus.INCORRECT;
-                } 
-
-                else {
-                    letter.status = LetterStatus.SEMICORRECT;
+                    currentIdxs.forEach((idx: number, current: number) => {
+                        if (guessLetters[idx].status !== LetterStatus.CORRECT && current < correctIdxs.length)
+                        guessLetters[idx].status = LetterStatus.SEMICORRECT;
+                    });
                 }
-            } else {
+                else if (correctGuessLetterIdxs.length <= 0) {
+                    currentIdxs.forEach((idx, current) => {
+                        if (current < correctIdxs.length) {
+                            guessLetters[idx].status = LetterStatus.SEMICORRECT;
+                        }
+                    });
+                }
+            }
+        });
+
+        guessLetters.forEach((letter: LetterObj) => {
+            if (letter.status === LetterStatus.NONE) {
                 letter.status = LetterStatus.INCORRECT;
             }
         });
         
-        return newLetters;
+        return guessLetters;
     }
 }
