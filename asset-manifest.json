@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/Wordordle/static/css/main.f0d72ac5.css",
-    "main.js": "/Wordordle/static/js/main.25f1078b.js",
+    "main.css": "/Wordordle/static/css/main.c002d3be.css",
+    "main.js": "/Wordordle/static/js/main.a959d109.js",
     "index.html": "/Wordordle/index.html",
-    "main.f0d72ac5.css.map": "/Wordordle/static/css/main.f0d72ac5.css.map",
-    "main.25f1078b.js.map": "/Wordordle/static/js/main.25f1078b.js.map"
+    "main.c002d3be.css.map": "/Wordordle/static/css/main.c002d3be.css.map",
+    "main.a959d109.js.map": "/Wordordle/static/js/main.a959d109.js.map"
   },
   "entrypoints": [
-    "static/css/main.f0d72ac5.css",
-    "static/js/main.25f1078b.js"
+    "static/css/main.c002d3be.css",
+    "static/js/main.a959d109.js"
   ]
 }
