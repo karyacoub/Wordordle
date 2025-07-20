@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React from "react";
+import React, { useEffect } from "react";
 import { useStore } from "../mobx/RootStore";
 
 enum KeyType {
@@ -11,6 +11,12 @@ enum KeyType {
 export const Keyboard: React.FunctionComponent = observer(() => {
 
     const store = useStore();
+
+    const keyboardRef = React.useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        keyboardRef.current?.focus();
+    });
 
     function onClick(e: any, keyType: KeyType) {
         if (!store.keyboardEnabled) {
@@ -26,15 +32,33 @@ export const Keyboard: React.FunctionComponent = observer(() => {
         }
     }
 
+    function onKeyPress(e: React.KeyboardEvent) {
+        if (!store.keyboardEnabled) {
+            return;
+        }
+
+        const char = e.key.toUpperCase();
+        if (char === "BACKSPACE" || char === "DELETE") {
+            store.backspace();
+        } else if (char === "ENTER") {
+            store.enter();
+        } else if (/^[A-Z]$/.test(char)) { // Check if it's a letter
+            store.addToCurrentGuess(char);
+        }
+    }
+
     function getDisabledClass() {
         return store.keyboardEnabled ? "" : "disabled";
     }
 
     function renderKey(char: string, keyType: KeyType) {
-        return <div className={`keyboard__key ${getDisabledClass()}`} onClick={(e: any) => onClick(e, keyType)}>{char}</div>;
+        return <div className={`keyboard__key ${getDisabledClass()}`} 
+                    onClick={(e: any) => onClick(e, keyType)}>
+                        {char}
+               </div>;
     }
 
-    return <div id="keyboard__container">
+    return <div id="keyboard__container" ref={keyboardRef} onKeyDown={onKeyPress} tabIndex={-1}>
         <div className="keyboard__row">
             {renderKey("Q", KeyType.LETTER)}
             {renderKey("W", KeyType.LETTER)}

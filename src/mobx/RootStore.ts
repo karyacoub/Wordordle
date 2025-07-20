@@ -45,9 +45,6 @@ class RootStore {
         const newGuesses = [...this.guesses];
 
         if (newGuesses[this.currentGuessNum].letters.length === this.maxGuessLength && this.currentGuessNum < this.maxGuessLength + 1) {
-            // const todaysWordLetters: LetterObj[] = this.todaysWord.split("").map((letter: string) => new LetterObj(letter));
-            // const todaysWordCasted = new Word(todaysWordLetters);
-
             newGuesses[this.currentGuessNum].validate(this.todaysWord);
 
             const currentGuess: Word = newGuesses[this.currentGuessNum];
