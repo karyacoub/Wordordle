@@ -10,7 +10,7 @@ export const Root: React.FunctionComponent = () => {
 
     useEffect(() => {
         store.setWordOfTheDay();
-    }, []);
+    }, [store]);
 
     return <CookiesProvider>
         <div id="root__container">

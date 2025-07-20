@@ -52,9 +52,13 @@ class RootStore {
         const newGuesses = [...this.guesses];
 
         if (newGuesses[this.currentGuessNum].letters.length === this.maxGuessLength && this.currentGuessNum < this.maxGuessLength + 1) {
-            newGuesses[this.currentGuessNum].validate(this.todaysWord!);
-
             const currentGuess: Word = newGuesses[this.currentGuessNum];
+
+            if (!wordsJson.words.includes(currentGuess.toString().toLowerCase())) {
+                return;
+            }
+
+            newGuesses[this.currentGuessNum].validate(this.todaysWord!);
 
             // disable keyboard if all letters are correct
             if (currentGuess.letters.every((letter: LetterObj) => letter.status === LetterStatus.CORRECT)) {

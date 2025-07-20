@@ -39,7 +39,7 @@ export class Word {
     }
 
     public toString(): string {
-        return this.letters.map((letter: LetterObj) => letter.char).join();
+        return this.letters.map((letter: LetterObj) => letter.char).join("");
     }
 }
 
