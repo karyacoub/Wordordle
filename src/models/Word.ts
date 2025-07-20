@@ -1,6 +1,7 @@
 import { LetterStatus } from "./Enums";
 import { Map } from "immutable";
 import { Letter } from "../components/Letter";
+import { useStore } from "../mobx/RootStore";
 
 export class Word {
     letters: LetterObj[];

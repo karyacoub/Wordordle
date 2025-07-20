@@ -13,6 +13,10 @@ export const Keyboard: React.FunctionComponent = observer(() => {
     const store = useStore();
 
     function onClick(e: any, keyType: KeyType) {
+        if (!store.keyboardEnabled) {
+            return;
+        }
+        
         if (keyType === KeyType.BACKSPACE) {
             store.backspace();
         } else if (keyType === KeyType.ENTER) {
@@ -22,8 +26,12 @@ export const Keyboard: React.FunctionComponent = observer(() => {
         }
     }
 
+    function getDisabledClass() {
+        return store.keyboardEnabled ? "" : "disabled";
+    }
+
     function renderKey(char: string, keyType: KeyType) {
-        return <div className="keyboard__key" onClick={(e: any) => onClick(e, keyType)}>{char}</div>;
+        return <div className={`keyboard__key ${getDisabledClass()}`} onClick={(e: any) => onClick(e, keyType)}>{char}</div>;
     }
 
     return <div id="keyboard__container">

@@ -1,14 +1,15 @@
 import { makeAutoObservable } from "mobx";
 import { Word, LetterObj, WordOfTheDay } from "../models/Word";
 import React from "react";
-import { LetterCount } from "../models/Enums";
+import { LetterCount, LetterStatus } from "../models/Enums";
 
 class RootStore {
 
     maxGuessLength: number = LetterCount.FIVE;
     currentGuessNum: number = 0;
     guesses: Word[] = [];
-    todaysWord: WordOfTheDay = new WordOfTheDay("loopy");
+    todaysWord: WordOfTheDay = new WordOfTheDay("popop");
+    keyboardEnabled: boolean = true;
 
     constructor() {
         makeAutoObservable(this);
@@ -24,6 +25,10 @@ class RootStore {
 
     setGuesses(guesses: Word[]) {
         this.guesses = guesses;
+    }
+
+    setKeyboardEnabled(keyboardEnabled: boolean) {
+        this.keyboardEnabled = keyboardEnabled;
     }
 
     backspace() {
@@ -45,7 +50,19 @@ class RootStore {
 
             newGuesses[this.currentGuessNum].validate(this.todaysWord);
 
+            const currentGuess: Word = newGuesses[this.currentGuessNum];
+
+            // disable keyboard if all letters are correct
+            if (currentGuess.letters.every((letter: LetterObj) => letter.status === LetterStatus.CORRECT)) {
+                this.setKeyboardEnabled(false);
+            }
+
             this.setCurrentGuessNum(this.currentGuessNum + 1);
+
+            // disable keyboard if current guess number exceeds max guess length
+            if (this.currentGuessNum > this.maxGuessLength) {
+                this.setKeyboardEnabled(false);
+            }
         }
 
         this.setGuesses(newGuesses);

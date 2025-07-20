@@ -26,8 +26,13 @@
             transition: backg;
             user-select: none;
 
-            &:hover {
+            &.disabled {
+                background-color: gray;
+                cursor: default !important;
+            }
 
+            &:hover {
+                cursor: pointer;
             }
         }
     }
